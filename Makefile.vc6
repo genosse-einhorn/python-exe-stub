@@ -1,0 +1,22 @@
+CXX     = cl.exe
+RC      = rc.exe
+CFLAGS  = -O1yig -GAs -Zl -W3 -D_WIN32=0x0502 -D_WIN32_WINNT=0x0502 -D_WIN32_IE=0x0502 -nologo
+LDFLAGS = /entry:msvcWinMainCRTStartup /incremental:no /opt:nowin98 kernel32.lib user32.lib shell32.lib comctl32.lib
+
+all: launchc.exe launchw.exe
+
+launchc.exe: launch.obj launch.res
+	$(CXX) $(CFLAGS) -Fe$@ $** /link /subsystem:console $(LDFLAGS)
+
+launchw.exe: launch.obj launch.res
+	$(CXX) $(CFLAGS) -Fe$@ $** /link /subsystem:windows $(LDFLAGS)
+
+launch.res: launch.rc launch.manifest
+	$(RC) -fo $@ launch.rc
+
+launch.obj: launch.c
+	$(CXX) $(CFLAGS) -c -Fo$@ -TP launch.c
+
+clean:
+	del /f *.obj *.exe *.res
+
